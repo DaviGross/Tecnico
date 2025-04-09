@@ -1,0 +1,38 @@
+body{
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.container{/*caixa principal*/
+    background:white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0.1);
+    width: 300px;
+    
+}
+/* remove os stilos padroes de lista*/
+ul{
+    list-style: none;
+    padding: 0px;
+}
+/*estiliza cada item da lista*/
+li{
+    background: #add;
+    margin: 5px 0;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 4px;
+    cursor: pointer;
+}
+/*estiliza tarefas concluidas*/
+.done{
+    text-decoration: line-through;
+    color: gray;
+}
