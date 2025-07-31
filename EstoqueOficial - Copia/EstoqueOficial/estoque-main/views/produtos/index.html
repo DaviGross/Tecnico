@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Produtos</title>
+    <link rel="stylesheet" href="../../public/style.css">
+    <style>
+        .btn-excluir {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .btn-excluir:hover {
+            background-color: #c82333;
+        }
+        .btn-editar {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-right: 5px;
+        }
+        .btn-editar:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Produtos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                <th>Preço (R$)</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-produtos"></tbody>
+    </table>
+    <a href="../produtos/cadastro.html" class="link-basico">Cadastrar Produto</a>
+    <a href="../../public/index.php" class="link-basico">Início</a>
+
+    <script>
+        function carregarProdutos() {
+            fetch('../../controllers/ProdutoController.php')
+                .then(res => res.json())
+                .then(produtos => {
+                    const tabela = document.getElementById('tabela-produtos');
+                    tabela.innerHTML = '';
+
+                    produtos.forEach(p => {
+                        const linha = document.createElement('tr');
+                        linha.innerHTML = `
+                            <td>${p.nome}</td>
+                            <td>${p.quantidade}</td>
+                            <td>${parseFloat(p.preco).toFixed(2)}</td>
+                            <td>
+                                <button class="btn-editar" data-id="${p.id}" data-nome="${p.nome}" data-quantidade="${p.quantidade}" data-preco="${p.preco}">Editar</button>
+                                <button class="btn-excluir" data-id="${p.id}">Excluir</button>
+                            </td>
+                        `;
+                        tabela.appendChild(linha);
+                    });
+
+                    document.querySelectorAll('.btn-excluir').forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const produtoId = event.target.dataset.id;
+                            if (confirm(`Tem certeza que deseja excluir o produto "${event.target.closest('tr').children[0].textContent}"?`)) {
+                                excluirProduto(produtoId);
+                            }
+                        });
+                    });
+
+                    document.querySelectorAll('.btn-editar').forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const produtoId = event.target.dataset.id;
+                            const produtoNome = event.target.dataset.nome;
+                            const produtoQuantidade = event.target.dataset.quantidade;
+                            const produtoPreco = event.target.dataset.preco;
+                            editarProduto(produtoId, produtoNome, produtoQuantidade, produtoPreco);
+                        });
+                    });
+                })
+                .catch(() => {
+                    alert('Erro ao carregar produtos.');
+                });
+        }
+
+        function excluirProduto(id) {
+            fetch(`../../controllers/ProdutoController.php?id=${id}`, {
+                method: 'DELETE'
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert('Produto excluído com sucesso!');
+                    carregarProdutos();
+                } else {
+                    return res.text().then(text => Promise.reject(text));
+                }
+            })
+            .catch(error => {
+                alert('Erro ao excluir produto: ' + error);
+                console.error('Erro na exclusão:', error);
+            });
+        }
+
+        function editarProduto(id, nome, quantidade, preco) {
+            sessionStorage.setItem('produtoParaEditar', JSON.stringify({ id, nome, quantidade, preco }));
+            window.location.href = '../produtos/edicao.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarProdutos);
+    </script>
+</body>
+</html>
