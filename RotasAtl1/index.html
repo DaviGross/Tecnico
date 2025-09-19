@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Rotas Aéreas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro de Rotas Aéreas</h1>
+        <form id="rotaForm">
+            <input type="hidden" id="rotaIndex" value="-1">
+            <div class="form-group">
+                <label for="partida">Local de Partida:</label>
+                <input type="text" id="partida" name="partida" required>
+            </div>
+            <div class="form-group">
+                <label for="chegada">Local de Chegada:</label>
+                <input type="text" id="chegada" name="chegada" required>
+            </div>
+            <div class="form-group">
+                <label for="conexoes">Conexões (opcional, separadas por vírgula):</label>
+                <input type="text" id="conexoes" name="conexoes">
+            </div>
+            <div class="form-group">
+                <label for="tempoVoo">Tempo de Voo (horas:minutos):</label>
+                <input type="text" id="tempoVoo" name="tempoVoo" placeholder="Ex: 02:30" required>
+            </div>
+            <button type="submit" id="cadastrarBtn">Cadastrar Rota</button>
+            <div class="botoes-edicao hidden">
+                <button type="button" id="salvarEdicaoBtn" class="salvar-btn">Salvar Edição</button>
+                <button type="button" id="cancelarEdicaoBtn" class="cancelar-btn">Cancelar</button>
+            </div>
+        </form>
+        <div id="mensagem" class="hidden"></div>
+    </div>
+    
+    <div class="container lista-container">
+        <h2>Rotas Cadastradas</h2>
+        <p id="listaVazia">Nenhuma rota cadastrada ainda.</p>
+        <table id="tabelaRotas" class="hidden">
+            <thead>
+                <tr>
+                    <th>Partida</th>
+                    <th>Chegada</th>
+                    <th>Conexões</th>
+                    <th>Tempo de Voo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
