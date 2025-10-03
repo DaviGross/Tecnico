@@ -25,6 +25,7 @@ function salvarPagamentos() {
 function renderizarVencimentos() {
     const listaVencimentos = document.getElementById('listaVencimentos');
     listaVencimentos.innerHTML = '';
+
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0); 
 
@@ -47,7 +48,7 @@ function renderizarVencimentos() {
             classeAlerta = 'pago';
             status = 'PAGO';
             acaoButton = `
-                <button class="btn btn-sm btn-outline-secondary me-1" disabled>Concluído</button>
+                <button class="btn btn-sm btn-info btn-desfazer-pago me-1" data-id="${pagamento.id}">Desfazer Pagamento</button>
                 <button class="btn btn-sm btn-danger btn-excluir" data-id="${pagamento.id}">Excluir</button>
             `;
         } else {
@@ -133,6 +134,16 @@ function marcarComoPago(id) {
     }
 }
 
+function desfazerPagamento(id) {
+    const index = pagamentos.findIndex(p => p.id === id);
+    if (index !== -1 && pagamentos[index].pago) { 
+        pagamentos[index].pago = false;
+        salvarPagamentos();
+        renderizarVencimentos();
+    }
+}
+
+
 function excluirPagamento(id) {
     if (confirm("Tem certeza que deseja excluir este pagamento?")) {
         pagamentos = pagamentos.filter(p => p.id !== id);
@@ -184,9 +195,14 @@ function adicionarListenersPagamento() {
         button.addEventListener('click', (e) => marcarComoPago(parseInt(e.target.getAttribute('data-id'))));
     });
 
+    document.querySelectorAll('.btn-desfazer-pago').forEach(button => {
+        button.addEventListener('click', (e) => desfazerPagamento(parseInt(e.target.getAttribute('data-id'))));
+    });
+
     document.querySelectorAll('.btn-excluir').forEach(button => {
         button.addEventListener('click', (e) => excluirPagamento(parseInt(e.target.getAttribute('data-id'))));
     });
+
 
     document.querySelectorAll('.btn-editar').forEach(button => {
         button.addEventListener('click', (e) => abrirModalEdicao(parseInt(e.target.getAttribute('data-id'))));
@@ -195,7 +211,6 @@ function adicionarListenersPagamento() {
 
 document.addEventListener('DOMContentLoaded', () => {
     carregarPagamentos(); 
-    
     renderizarVencimentos();
 
     const form = document.getElementById('formAdicionarPagamento');
